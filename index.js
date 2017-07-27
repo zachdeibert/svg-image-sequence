@@ -117,7 +117,12 @@ function renderFrame(frameNum) {
             img.height = height;
             li.appendChild(img);
             imageContainer.appendChild(li);
-            zip.file("" + frameNum + ".png", b64.split("base64,", 2)[1], {
+            var filename = "" + frameNum + ".png";
+            var filenameLen = ("" + (totalFrames - 1)).length + 4;
+            while (filename.length < filenameLen) {
+                filename = "0" + filename;
+            }
+            zip.file(filename, b64.split("base64,", 2)[1], {
                 "base64": true
             });
             setTimeout(renderFrame.bind(null, frameNum + 1));
