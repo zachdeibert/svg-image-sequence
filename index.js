@@ -1,12 +1,22 @@
-var fps, btn, imageContainer, progress, canvas, ctx, tempImg, svgText, svgXml, width, height, totalFrames;
+var fps, btn, imageContainer, progress, canvas, tempImg, downloadBtn, ctx, svgText, svgXml, width, height, totalFrames, zip;
 
 function reportProgress(percent) {
-    progress.style.width = "" + percent + "%";
+    if (isNaN(percent)) {
+        progress.classList.add("indeterminate");
+        progress.classList.remove("determinate");
+        progress.style.width = "";
+    } else {
+        progress.classList.remove("indeterminate");
+        progress.classList.add("determinate");
+        progress.style.width = "" + percent + "%";
+    }
 }
 
 function end() {
     btn.classList.remove("disabled");
     progress.parentElement.classList.add("hidden");
+    downloadBtn.classList.remove("hidden");
+    downloadBtn.classList.remove("disabled");
 }
 
 function findMax(element, attribute) {
@@ -65,6 +75,14 @@ function animate(pos, from, to) {
 
 function renderFrame(frameNum) {
     if (frameNum == totalFrames) {
+        reportProgress(NaN);
+        zip.generateAsync({
+            "type": "base64"
+        }).then(function(content) {
+            downloadBtn.setAttribute("download", document.getElementById("path").value.replace(/[^.]+$/, "") + "zip");
+            downloadBtn.href = "data:application/zip;base64," + content;
+            end();
+        });
         end();
     } else {
         reportProgress(frameNum * 100 / totalFrames);
@@ -94,11 +112,14 @@ function renderFrame(frameNum) {
             var li = document.createElement("li");
             li.classList.add("collection-item");
             var img = document.createElement("img");
-            img.src = canvas.toDataURL();
+            var b64 = img.src = canvas.toDataURL();
             img.width = width;
             img.height = height;
             li.appendChild(img);
             imageContainer.appendChild(li);
+            zip.file("" + frameNum + ".png", b64.split("base64,", 2)[1], {
+                "base64": true
+            });
             setTimeout(renderFrame.bind(null, frameNum + 1));
         };
         var svgStr = new XMLSerializer().serializeToString(svgXml);
@@ -157,6 +178,7 @@ function start() {
     progress = document.getElementById("progress");
     canvas = document.getElementById("canvas");
     tempImg = document.getElementById("tempImg");
+    downloadBtn = document.getElementById("download");
     var reader = new FileReader();
     reader.addEventListener("load", function() {
         svgText = reader.result;
@@ -168,10 +190,12 @@ function start() {
         tempImg.width = width;
         tempImg.height = height;
         printParams();
+        zip = new JSZip();
         setTimeout(renderFrame.bind(null, 0));
     });
     reader.readAsText(document.getElementById("file").files[0]);
     btn.classList.add("disabled");
+    downloadBtn.classList.add("disabled");
     while (imageContainer.childNodes.length > 0) {
         imageContainer.removeChild(imageContainer.childNodes[0]);
     }
