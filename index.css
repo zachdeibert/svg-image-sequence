@@ -1,0 +1,15 @@
+.nav-content {
+    padding-top: 20px;
+}
+.file-path {
+    border-bottom: 1px solid #9e9e9e !important;
+}
+.hidden {
+    display: none;
+}
+.row {
+    margin-bottom: 0;
+}
+.collection-item {
+    text-align: center;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>SVG to Image Sequence Converter</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+        <link rel="stylesheet" href="index.css" />
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <nav class="nav-extended indigo lighten-2">
+            <div class="nav-wrapper container">
+                <a class="brand-logo">
+                    SVG to Image Sequence Converter
+                </a>
+                <ul class="right">
+                    <li>
+                        <a href="https://github.com/zachdeibert/svg-image-sequence">
+                            View on GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-content container">
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input placeholder="FPS" id="fps" type="number" min="1" value="30" class="validate" />
+                        <label for="fps" class="white-text">
+                            FPS
+                        </label>
+                    </div>
+                    <div class="file-field input-field col s6">
+                        <input type="file" id="file" />
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" placeholder="SVG File" type="text" id="path" />
+                            <label for="path" class="white-text">
+                                SVG File
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-field col s2 btn waves-effect waves-green" id="btn" onclick="start()">
+                        Convert
+                    </div>
+                </div>
+            </div>
+            <div class="progress hidden">
+                <div class="determinate" id="progress"></div>
+            </div>
+        </nav>
+        <div class="container">
+            <ul class="collection hidden" id="images"></ul>
+        </div>
+        <noscript>
+            <h3>
+                This application requires javascript support.
+            </h3>
+        </noscript>
+        <canvas id="canvas">
+            <h3>
+                This application requires &lt;canvas&gt; support.
+            </h3>
+        </canvas>
+        <img id="tempImg" class="hidden" />
+    </body>
+</html>
